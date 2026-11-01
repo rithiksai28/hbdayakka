@@ -1,0 +1,6 @@
+{
+  "name": "A Personal Birthday Experience & Artistic Eye Gallery",
+  "description": "An artistic, heartfelt birthday tribute featuring personal memories, custom written messages, photographs, videos, and a curated gallery of 50 artistic eye illustrations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
