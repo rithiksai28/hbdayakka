@@ -15,17 +15,35 @@ export default function App() {
   const [isStoryManagerOpen, setIsStoryManagerOpen] = useState(false);
   const [showEditorButton, setShowEditorButton] = useState(false);
 
-  // Load config from localStorage if user tested edits, fallback to initialBirthdayConfig
+  // Version tag to invalidate any stale localStorage from earlier testing or templates
+  const STORY_DATA_VERSION = 'v2_kavya_final';
+
+  // Load config: Always default to initialBirthdayConfig (which contains Kavya's permanent story data)
   const [config, setConfig] = useState<BirthdayConfig>(() => {
     try {
+      const version = localStorage.getItem('birthday_story_version');
       const saved = localStorage.getItem('birthday_experience_config');
-      if (saved) {
-        return JSON.parse(saved);
+
+      // If version mismatch or no saved config, reset to canonical initialBirthdayConfig
+      if (version !== STORY_DATA_VERSION || !saved) {
+        localStorage.setItem('birthday_story_version', STORY_DATA_VERSION);
+        localStorage.setItem('birthday_experience_config', JSON.stringify(initialBirthdayConfig));
+        return initialBirthdayConfig;
       }
+
+      const parsed = JSON.parse(saved);
+      // Ensure the saved config has the authentic Kavya data
+      if (parsed?.recipientName === 'Kavya' && parsed?.sections?.length >= 5) {
+        return parsed;
+      }
+
+      // Fallback reset
+      localStorage.setItem('birthday_experience_config', JSON.stringify(initialBirthdayConfig));
+      return initialBirthdayConfig;
     } catch (e) {
       console.warn('Failed to parse saved config:', e);
+      return initialBirthdayConfig;
     }
-    return initialBirthdayConfig;
   });
 
   // Custom artworks map (id -> imageUrl)
